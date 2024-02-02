@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 export function Signin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const navigate = useNavigate();
+    
     const auth = getAuth();
+    const googleProvider = new GoogleAuthProvider();
+    const navigate = useNavigate();
 
     async function handleSignIn(e) {
         e.preventDefault();
@@ -16,9 +18,21 @@ export function Signin() {
             navigate('/home');
         } 
         catch (error) {
-            console.log(error);
+            console.error(error)
         }
-    }
+    };
+
+    async function handleSignInWithGoogle(e) {
+        e.preventDefault();
+        try {
+            const newUser = await signInWithPopup(auth, googleProvider);
+            console.log(newUser);
+            navigate('/home');
+        } 
+        catch (error) {
+            console.error(error)
+        }
+    };
 
     return (
         <>
@@ -34,11 +48,17 @@ export function Signin() {
                     name="password" 
                     id="password" 
                     placeholder="Password" />
-                <button
-                    onClick={(e) => {handleSignIn(e)}}>
-                    Sign in
-                </button>
+                <div>
+                    <button
+                        onClick={(e) => {handleSignIn(e)}}>
+                        Sign in
+                    </button>
+                    <button
+                        onClick={(e) => {handleSignInWithGoogle(e)}}>
+                        Google Sign in
+                    </button>
+                </div>
             </form>
         </>
     )
-}
+};

@@ -16,7 +16,7 @@ export function Signup() {
             console.log(newUser)
         } 
         catch (error) {
-            console.log(error)
+            console.error(error)
         }
         
         // alert(email + " : " + password)
